@@ -6,12 +6,6 @@ do
     echo "####### word $word"
     for file in $files
     do
-    line=$(grep -w "$word" $file)
-    if [ "$line" != "" ]
-    then
-        echo $ $file
-        
-    fi
-    
+        grep -w -H "$word" $file
     done
 done

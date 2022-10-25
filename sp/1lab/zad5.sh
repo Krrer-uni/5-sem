@@ -1,7 +1,2 @@
 #!/bin/bash
-files=$(find $1 -type f)
-
-for file in $files
-do
-cat $file | sed  's/a/A/g' >
-done
+find $1 -type f -exec sed -i 's/a/A/g' {} \;
