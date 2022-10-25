@@ -1,3 +1,5 @@
+# by Wojciech Rymer
+
 #include <float.h>
 #include <stdio.h>
 int main(){

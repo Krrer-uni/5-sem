@@ -1,3 +1,5 @@
+# by Wojciech Rymer
+
 using Printf
 
 function checkeps(T)

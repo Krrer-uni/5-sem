@@ -1,3 +1,5 @@
+# by Wojciech Rymer
+
 function finddif()
     x::Float64 = nextfloat(1.0)
     while x != Float64(2.0)
