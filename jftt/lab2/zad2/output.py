@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
 
-# Hello world!
 
 bar = 0
 
-# foo \
 bar = 17
 
 baz = 'He # llo!'
@@ -19,7 +16,6 @@ qwe = "\
 
 asd = (
     17,
-    # 23,
     34
 )
 
@@ -42,7 +38,6 @@ def foo():
 """.format(foo())
 
 if True:
-    # Print all:
     print(bar)
     print(baz)
     print(zxc)

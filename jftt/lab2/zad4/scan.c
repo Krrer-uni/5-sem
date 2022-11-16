@@ -466,6 +466,7 @@ int WC=0;
 bool pop_error_flag = false;
 bool push_error_flag = false;
 bool wrong_char_flag = false;
+bool divide_zero_flag = false;
 
 int pop(){
     if(stack_top == -1){
@@ -485,8 +486,8 @@ int push(int number){
     return 1;
 }
 
-#line 489 "scan.c"
 #line 490 "scan.c"
+#line 491 "scan.c"
 
 #define INITIAL 0
 
@@ -703,10 +704,10 @@ YY_DECL
 		}
 
 	{
-#line 37 "scan.l"
+#line 38 "scan.l"
 
 
-#line 710 "scan.c"
+#line 711 "scan.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -765,12 +766,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 39 "scan.l"
+#line 40 "scan.l"
 {push(atoi(yytext));}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 41 "scan.l"
+#line 42 "scan.l"
 {
     int a = pop();
     int b = pop();
@@ -779,7 +780,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 47 "scan.l"
+#line 48 "scan.l"
 {
     int a = pop();
     int b = pop();
@@ -788,7 +789,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 53 "scan.l"
+#line 54 "scan.l"
 {
     int a = pop();
     int b = pop();
@@ -797,26 +798,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 59 "scan.l"
+#line 60 "scan.l"
 {
     int a = pop();
     int b = pop();
-    push(b / a);
+    if(a == 0){
+        push(1);
+        divide_zero_flag = true;
+    }
+    else{
+        push(b / a);
+    }
+    
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 65 "scan.l"
+#line 73 "scan.l"
 {
     int a = pop();
     int b = pop();
-    push(b % a);
+        if(a == 0){
+        push(1);
+        divide_zero_flag = true;
+    }
+    else{
+        push(b % a);
+    }
 }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 71 "scan.l"
+#line 85 "scan.l"
 {
     int result = pop();
     if(stack_top >= 0){
@@ -826,10 +840,13 @@ YY_RULE_SETUP
     }else if(push_error_flag == true){
         printf("ERROR stack overflow\n");
     }else if(wrong_char_flag == true){
-        printf("ERROR illegal character");
+        printf("ERROR illegal character\n");
+    }else if(divide_zero_flag = true){
+        printf("ERROR division by 0\n");
     }else {
         printf("%d\n",result);
     }
+    divide_zero_flag = false;
     pop_error_flag = false;
     push_error_flag = false;
     stack_top = -1;
@@ -838,15 +855,15 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 89 "scan.l"
+#line 106 "scan.l"
 wrong_char_flag=true;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 91 "scan.l"
+#line 108 "scan.l"
 ECHO;
 	YY_BREAK
-#line 850 "scan.c"
+#line 867 "scan.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1851,7 +1868,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "scan.l"
+#line 108 "scan.l"
 
 
 int yywrap() { 

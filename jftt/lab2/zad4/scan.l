@@ -11,6 +11,7 @@ int WC=0;
 bool pop_error_flag = false;
 bool push_error_flag = false;
 bool wrong_char_flag = false;
+bool divide_zero_flag = false;
 
 int pop(){
     if(stack_top == -1){
@@ -59,13 +60,26 @@ OPERATOR [+-%/^]
 [[:blank:]]*\/ {
     int a = pop();
     int b = pop();
-    push(b / a);
+    if(a == 0){
+        push(1);
+        divide_zero_flag = true;
+    }
+    else{
+        push(b / a);
+    }
+    
 }
 
 [[:blank:]]*% {
     int a = pop();
     int b = pop();
-    push(b % a);
+        if(a == 0){
+        push(1);
+        divide_zero_flag = true;
+    }
+    else{
+        push(b % a);
+    }
 }
 
 [[:blank:]]*\n {
@@ -78,9 +92,12 @@ OPERATOR [+-%/^]
         printf("ERROR stack overflow\n");
     }else if(wrong_char_flag == true){
         printf("ERROR illegal character\n");
+    }else if(divide_zero_flag = true){
+        printf("ERROR division by 0\n");
     }else {
         printf("%d\n",result);
     }
+    divide_zero_flag = false;
     pop_error_flag = false;
     push_error_flag = false;
     stack_top = -1;

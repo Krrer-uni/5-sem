@@ -16,7 +16,7 @@ int WC=0;
 %%
 
 int yywrap() { 
-    printf("\n---\n\%d \%d\n",NL,WC); 
+    // printf("\n---\n\%d \%d\n",NL,WC); 
     return 1; 
 } 
 

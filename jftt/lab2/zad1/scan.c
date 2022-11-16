@@ -1776,7 +1776,7 @@ void yyfree (void * ptr )
 
 
 int yywrap() { 
-    printf("\n---\n\%d \%d\n",NL,WC); 
+    // printf("\n---\n\%d \%d\n",NL,WC); 
     return 1; 
 } 
 
