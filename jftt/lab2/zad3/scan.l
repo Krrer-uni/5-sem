@@ -5,7 +5,7 @@ int yywrap();
 int yylex();
 int NL=0;
 int WC=0;
-int debug_flag = 1;
+int debug_flag = 0;
 %} 
 
 %%

@@ -1,0 +1,4 @@
+C++ mniej bardziej python
+
+klasa struct
+sterta

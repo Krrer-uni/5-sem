@@ -1,0 +1,5 @@
+/x.(/y. x^3 + 3y^2) (x+y) alpha na x
+/a.(/y. a^3 + 3y^2) (x+y) alpha na y
+/a.(/b. a^3 + 3b^2) (x+y) beta na b
+/b.((x+y)^3 +b^3) 
+/b.(x^3 + 3x^2y + 3xy^2 + y^3 + b^3)

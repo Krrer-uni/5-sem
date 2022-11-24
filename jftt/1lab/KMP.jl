@@ -21,7 +21,7 @@ function KMP(T,P)
     n = length(T)
     m = length(P)
     dic = computePrefix(P)
-    println(dic)
+    # println(dic)
     match = []
     q = 0
     for i in 1:n

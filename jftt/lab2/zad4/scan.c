@@ -841,7 +841,7 @@ YY_RULE_SETUP
         printf("ERROR stack overflow\n");
     }else if(wrong_char_flag == true){
         printf("ERROR illegal character\n");
-    }else if(divide_zero_flag = true){
+    }else if(divide_zero_flag == true){
         printf("ERROR division by 0\n");
     }else {
         printf("%d\n",result);

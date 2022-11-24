@@ -1,0 +1,10 @@
+prime n =(length [ t |t <- [1..n-1], gcd t n == 1])
+primes n = length [t|t <- [1..n],  prime t == t-1]
+
+:{
+primes n | n < 2 = 0
+         | otherwise = length [t|t <- [1..n],  prime t == t-1]
+:}
+
+
+primes n = length [t|t <- [1..n],  prime t == t-1]
