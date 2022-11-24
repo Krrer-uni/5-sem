@@ -1,0 +1,223 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{polski}
+\usepackage{float}
+\usepackage{amssymb}
+
+\usepackage{textcomp}
+\usepackage{subfig}
+\graphicspath{ {./images/} }
+
+\title{Lista 2}
+\author{Wojciech Rymer }
+\date{Październik 2022}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{Zadanie 1}
+\paragraph{Opis problemu}
+Zadanie polega na sprawdzeniu jaki wpływa na obliczenie iloczynu wektorowego ma niewielkie zaburzenie w danych. Zaburzenia danych wejsciowych pogrubiono: \\
+$x = [2.718281828, -3.141592654, 1.414213562, 0.5772156649, 0.3010299957]$ \\
+$y = [1486.2497, 878366.9879, -22.37492, 4773714.647, 0.000185049]$ \\
+$x' = [2.718281828, -3.141592654, 1.414213562, \mathbf{0.577215664}, \mathbf{0.301029995}]$ \\
+$y' = y$\\
+\paragraph{Rozwiązanie}
+Zaimplementowane zostały 4 sposoby przedstawione w zadaniu: "w przód", "w tył", od największego iloczynu do najmniejszego, od najmniejszego iloczynu do największego.
+\paragraph{Wyniki}
+Wyniki przedstawione w formie tabeli
+\begin{table}[H]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Sposób sumowania} & \textbf{Float32} & \textbf{Float32 zaburzony} & \textbf{Float64}        & \textbf{Float64 zaburzony} \\ \hline
+"w przód"                 & -0.4999443       & 0.4999443                  & 0.10251881368296672e-9  & -0.4296342739891585e-2     \\ \hline
+"w tył"                   & -0.4543457       & 0.4543457                  & -0.15643308870494366e-9 & -0.4296342998713953e-2     \\ \hline
+malejąco                  & -0.5             & -0.5                       & 0.0                     & -0.4296342842280865e-2     \\ \hline
+rosnąco                   & -0.5             & -0.5                       & 0.0                     & -0.4296342842280865e-2     \\ \hline
+\end{tabular}%
+}
+\end{table}
+\paragraph{Wnioski}
+Zaburzenia nie wpłyneły na obliczenia w precyzji Float32, ale dla precyzji Float64 pojawiły się znaczące różnice. Zaburzenia rzędu $10^{-10}$ zmieniło finalny wynik o $5*10^{-3}$. Ma to miejsce dlatego że zmienione pole $x'$ jest wymnażane z polem $y$ mającym stosunkowo dużą wartość. To pokazuje dużą wagę precyzji używanych danych.
+
+
+\section*{Zadanie 2}
+\paragraph{Opis problemu}
+Zadanie polega na narysowaniu wykresu funkcji $f(x) = e^xln(1 + e^{-x})$ w dwóch programach do wizualizacji i porównaniu go z obliczoną granicą $lim_{x->\infty}f(x)$.
+\paragraph{Rozwiązanie}
+Użyte programy to Julia 1.7.2 i wersja online Wolfram Alpha. Granica została policzona Wolframem Alpha.
+\paragraph{Wyniki}
+Obliczona granica $lim_{x->\infty}f(x) = 1$. Programy do wizualizacji nie poradziły sobie z narysowaniem wykresów. W obydwu przypadkach dla $x>30$ zaczęły pojawiać się anomalię powstałe na skutek ograniczonej precyzji liczb maszynowych, a dla $x>36$ pokazują wartość 0, co nie zgadza się z policzoną granicą.
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering widok globalny]{{\includegraphics[width=8cm]{images/gloablyjl.png} }}%
+    \qquad
+    \subfloat[\centering anomalia]{{\includegraphics[width=8cm]{images/anomallyjl.png} }}%
+    \caption{Wykresy w Julii}%
+    \label{fig:example}%
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering widok globalny]{{\includegraphics[width=8cm]{images/anomallywa.png} }}%
+    \qquad
+    \subfloat[\centering anomalia]{{\includegraphics[width=8cm]{images/globalwa.png} }}%
+    \caption{Wykresy w Wolframie}%
+    \label{fig:example}%
+\end{figure}
+
+\paragraph{Wnioski}
+Programy do wizualizacji też są podatne na błędy wynikające z ograniczonej precyzji arytmetyki liczb maszynowych i używając ich powinno się zachować pewną dozę niepewności. W tym przypadku problem tkwi w działaniu $1 + e^{-x}$ gdzie dla odpowiednio dużych $x$, $e^{-x}$ przekracza wartość epsilona maszynowego i $ln(1 + e^{-x}) = 0$. 
+
+
+\section*{Zadanie 3}
+\paragraph{Opis problemu}
+Problem polegał na analizie jak na wektor $x = (1,...,1)^T$ zniekształci się na wskutek użycia go do obliczeń na macierzach. Dla danej macierzy $A$ obliczamy $b = Ax$ a następnie rozwiązujemy równanie $Ax' = b$ dla $x'$. Dane są dwa sposoby rozwiązywania tego układu równań, metoda eliminacji Gaussa $x' = A \setminus b$  oraz $x' = A^{-1}b$. Macierz A jest generowana w następujący sposób:
+\begin{itemize}
+    \item $A = H_n$ gdzie $H_n$ to macierz hilberta. Testy dla tej macierzy są wykonane dla rosnących $n$
+    \item $A = R_n$ gdzie $R_n$ to losowa macierz stopnia n z ustalonym wskaźnikiem uwarunkowania.
+\end{itemize}
+\paragraph{Rozwiązanie}
+Do generowania macierzy $A$ zostały użyte podane w zadaniu funkcje. Macierz hilberta była sprawdzana dla $n = 5,10,...,50$
+\paragraph{Wyniki}
+Tabele przedstawiają rozmiar macierzy, jej rząd, uwarunkowanie oraz błąd znomrmalizowany powstały na wskutek użycia metody gaussa i macierzy odwrotnej.
+\begin{table}[H]%
+    \centering
+    \caption{Wyniki dla macierzy Hilberta}
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+        \textbf{Rozmiar} & \textbf{Rząd} & \textbf{Uwarunkowanie} & \textbf{Gauss} & \textbf{Inverse} \\ \hline
+        5 & 5 & 4.766e+05 & 1.68284e-12 & 3.25430e-12 \\ \hline
+        10 & 10 & 1.602e+13 & 2.56393e-04 & 4.78753e-04 \\ \hline
+        15 & 12 & 6.504e+17 & 2.09231e+00 & 4.33782e+00 \\ \hline
+        20 & 13 & 2.538e+18 & 2.33712e+01 & 5.28848e+01 \\ \hline
+        25 & 13 & 6.092e+19 & 9.04543e+01 & 5.35339e+02 \\ \hline
+        30 & 14 & 2.452e+18 & 6.94599e+00 & 2.70661e+01 \\ \hline
+        35 & 14 & 7.356e+18 & 2.47369e+01 & 7.43584e+01 \\ \hline
+        40 & 15 & 9.221e+18 & 1.11053e+02 & 3.38610e+02 \\ \hline
+        45 & 15 & 9.220e+18 & 6.91431e+01 & 1.50357e+02 \\ \hline
+        50 & 16 & 2.273e+20 & 1.81841e+02 & 5.76505e+02 \\ \hline
+    \end{tabular}
+    \label{Macierz Hilberta}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \caption{Macierz dla losowej macierzy}
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+        \textbf{size} & \textbf{rank} & \textbf{cond} & \textbf{gauss} & \textbf{inverse} \\ \hline
+        5 & 5 & 1.000e+00 & 9.93014e-17 & 1.40433e-16 \\ \hline
+        5 & 5 & 1.000e+01 & 1.48952e-16 & 1.11022e-16 \\ \hline
+        5 & 5 & 1.000e+03 & 7.12725e-15 & 1.85287e-14 \\ \hline
+        5 & 5 & 1.000e+07 & 8.89102e-11 & 8.82763e-11 \\ \hline
+        5 & 5 & 1.000e+12 & 1.98114e-05 & 1.64519e-05 \\ \hline
+        5 & 4 & 8.520e+15 & 1.07136e+00 & 1.02718e+00 \\ \hline
+        10 & 10 & 1.000e+00 & 3.33067e-16 & 3.36747e-16 \\ \hline
+        10 & 10 & 1.000e+01 & 2.01682e-16 & 2.62727e-16 \\ \hline
+        10 & 10 & 1.000e+03 & 8.54223e-16 & 4.52884e-15 \\ \hline
+        10 & 10 & 1.000e+07 & 3.74051e-11 & 3.95855e-11 \\ \hline
+        10 & 10 & 1.000e+12 & 3.86827e-06 & 1.03067e-05 \\ \hline
+        10 & 9 & 5.836e+15 & 5.64205e-02 & 7.71818e-02 \\ \hline
+        20 & 20 & 1.000e+00 & 6.00958e-16 & 4.40606e-16 \\ \hline
+        20 & 20 & 1.000e+01 & 3.81374e-16 & 4.71681e-16 \\ \hline
+        20 & 20 & 1.000e+03 & 2.13049e-14 & 1.79359e-14 \\ \hline
+        20 & 20 & 1.000e+07 & 1.78901e-10 & 2.06206e-10 \\ \hline
+        20 & 20 & 1.000e+12 & 1.20342e-05 & 1.58496e-05 \\ \hline
+        20 & 19 & 1.141e+17 & 4.61108e-02 & 4.76819e-02 \\ \hline
+    \end{tabular}
+    \label{Macierz Losowa}
+\end{table}
+\paragraph{Wnioski}
+Oczekiwanym wynikiem dla takich obliczeń byłby $x' = x$, jednak działania na liczbach maszynowych odkształcają $x'$ generując znaczące błędy. Dla macierzy Hilberta błąd rośnie w miarę zwiększania rozmiaru i dla $n=50$ wynosi nawet $5.75e+2$. Mimo że obydwie metody dają błędy tego samego rzędu, eliminacja Gaussa zwykle okazuje się dokładniejsza. Dla macierzy losowej błędy rosną w miarę zwiększania wskaźnika uwarunkowania niezależnie od jej rozmiaru. Widać że można szacować błąd przy obliczeniach na podstawie wskaźnika uwarunkowania macierzy.
+
+\section*{Zadanie 4}
+\paragraph{Opis problemu}
+Zadany jest wielomian:
+\begin{center}\[p(x) = \prod_{i=1}^{20}(x-i)\]
+\end{center}
+Celem jest znalezienie pierwiastków postaci naturalnej tego wielomianu a następnie sprawdzenie jakie wartości zwracają postać naturalna i iloczynowa, przy podstawieniu znalezionych pierwiastków oraz jak te pierwiastki różnią się od prawdziwych zer $p(x)$. Następnie należy powtórzyć zadanie przy zaburzonym współczynniku przy $x^19$ o $-2^{-23}$
+\paragraph{Rozwiązanie}
+Do znalezienia miejsc zerowych wykorzystana została biblioteka Polynomials z funkcją roots.
+
+\paragraph{Wyniki}
+Mimo stosunkowo małego błędu w obliczonych zerach wielomianu, wartości w tych punktach mają ogromne rozbieżności. Zaburzenie wielomianu o $-2^{-23}$ zmieniło wartości wyliczone w postaci iloczynowej o nawet $10^5$, nie wpłynęło jednak wyraźnie na postać naturalną. 
+\begin{table}[H]
+    \centering
+    \caption{Wyniki dla niezaburzonego wielomianu}
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{naturalna} & \textbf{iloczynowa} & \textbf{błąd bezwzględny} \\ \hline
+        3.5696509648e+04 & 3.6626425482e+04 & 3.0109248428e-13 \\ \hline
+        1.7625260027e+05 & 1.8130393367e+05 & 2.8318236645e-11 \\ \hline
+        2.7915769688e+05 & 2.9017228589e+05 & 4.0790348876e-10 \\ \hline
+        3.0271092989e+06 & 2.0415372903e+06 & 1.6262468261e-08 \\ \hline
+        2.2917473757e+07 & 2.0894625007e+07 & 6.6576979130e-07 \\ \hline
+        1.2902417284e+08 & 1.1250484578e+08 & 1.0754175227e-05 \\ \hline
+        4.8051127546e+08 & 4.5729086427e+08 & 1.0200279301e-04 \\ \hline
+        1.6379520219e+09 & 1.5556459377e+09 & 6.4417039224e-04 \\ \hline
+        4.8770713726e+09 & 4.6878161756e+09 & 2.9152943621e-03 \\ \hline
+        1.3638638195e+10 & 1.2634601897e+10 & 9.5869575183e-03 \\ \hline
+        3.5856312951e+10 & 3.3001284745e+10 & 2.5022932909e-02 \\ \hline
+        7.5333323604e+10 & 7.3885256654e+10 & 4.6716746153e-02 \\ \hline
+        1.9605988124e+11 & 1.8476215093e+11 & 7.4314032447e-02 \\ \hline
+        3.5751347823e+11 & 3.5514277528e+11 & 8.5244408198e-02 \\ \hline
+        8.2162712365e+11 & 8.4232015590e+11 & 7.5493799699e-02 \\ \hline
+        1.5514978880e+12 & 1.5707287366e+12 & 5.3713283392e-02 \\ \hline
+        3.6947359185e+12 & 3.3169782239e+12 & 2.5427146237e-02 \\ \hline
+        7.6501090165e+12 & 6.3448531418e+12 & 9.0786472835e-03 \\ \hline
+        1.1435273750e+13 & 1.2285717367e+13 & 1.9098182994e-03 \\ \hline
+        2.7924106394e+13 & 2.3183095353e+13 & 1.9070876336e-04 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Wyniki dla zaburzonego wielomianu}
+    \begin{tabular}{|l|l|l|}
+    \hline
+        \textbf{naturalna} & \textbf{iloczynowa} & \textbf{błąd bezwzględny} \\ \hline
+        2.0259872313e+04 & 1.9987872313e+04 & 1.6431300764e-13 \\ \hline
+        3.4654141376e+05 & 3.5236941381e+05 & 5.5037308044e-11 \\ \hline
+        2.2580597001e+06 & 2.4162415583e+06 & 3.3965799062e-09 \\ \hline
+        1.0542631790e+07 & 1.1263702300e+07 & 8.9724362162e-08 \\ \hline
+        3.7578309166e+07 & 4.4757444238e+07 & 1.4261120898e-06 \\ \hline
+        1.3140943326e+08 & 2.1421031658e+08 & 2.0476673031e-05 \\ \hline
+        3.9393558746e+08 & 1.7846173428e+09 & 3.9792957758e-04 \\ \hline
+        1.1849869614e+09 & 1.8686972170e+10 & 7.7720290994e-03 \\ \hline
+        2.2255221233e+09 & 1.3746309775e+11 & 8.4183632067e-02 \\ \hline
+        1.0677921233e+10 & 1.4900695352e+12 & 6.5195868304e-01 \\ \hline
+        1.0677921233e+10 & 1.4900695352e+12 & 1.1109180273e+00 \\ \hline
+        3.1401962344e+10 & 3.2962792356e+13 & 1.6652812906e+00 \\ \hline
+        3.1401962344e+10 & 3.2962792356e+13 & 2.0458202767e+00 \\ \hline
+        2.1576654060e+11 & 9.5460223658e+14 & 2.5188358712e+00 \\ \hline
+        2.1576654060e+11 & 9.5460223658e+14 & 2.7128805313e+00 \\ \hline
+        4.8501108939e+11 & 2.7421060769e+16 & 2.9060018735e+00 \\ \hline
+        4.8501108939e+11 & 2.7421060769e+16 & 2.8254835213e+00 \\ \hline
+        4.5571992239e+12 & 4.2524858765e+17 & 2.4540214463e+00 \\ \hline
+        4.5571992239e+12 & 4.2524858765e+17 & 2.0043294443e+00 \\ \hline
+        8.7563865519e+12 & 1.3743743560e+18 & 8.4691021519e-01 \\ \hline
+    \end{tabular}
+\end{table}
+\paragraph{Wnioski}
+Obliczając pierwiastki postaci normalnej tego wielomianu wielokrotnie występuje dodawanie liczb o rzędach większych od precyzji arytmetyki Float64. Dla przykładu $20^20$ jest rzędu $10^26$ gdzie precyzja arytmetyki wynosi maksymalnie $10^17$. W postaci iloczynowej małe błędy są propagowane wykładniczo względem 
+
+\section{Zadanie 5}
+\paragraph{Opis problemu}
+Dane jest równanie rekurencyjne $p_{n+1} := p_n + rp_n(1-p_n)$ gdzie r jest pewną stałą. Zadanie polega na sprawdzeniu jak zmieniają się kolejne wyniki na wskutek zaokrąglenia $p_n$, oraz na wskutek zmniejszenia precyzji w obliczeniach.
+\paragraph{Rozwiązanie}
+Wartości zostały wyliczone, a wyniki przedstawione na wykresach.
+\paragraph{Wyniki}
+
+\begin{figure}[H]
+\centering
+\caption{Porównanie wartości f do faktycznej wartości pochodnej.}
+\includegraphics[scale=0.5]{images/zad7.png}    
+\end{figure}
+
+\end{document}
