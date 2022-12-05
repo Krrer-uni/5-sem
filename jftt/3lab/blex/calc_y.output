@@ -1,9 +1,3 @@
-Terminals unused in grammar
-
-    NEG
-    POW
-
-
 Grammar
 
     0 $accept: input $end
@@ -15,15 +9,13 @@ Grammar
     4     | expr '\n'
     5     | error '\n'
 
-    6 expr: expr ADD term
-    7     | expr SUB term
-    8     | term
-
-    9 term: term MUL fact
-   10     | term DIV fact
-   11     | fact
-
-   12 fact: "number"
+    6 expr: "number"
+    7     | expr '+' expr
+    8     | expr '-' expr
+    9     | expr '*' expr
+   10     | expr '/' expr
+   11     | expr '^' expr
+   12     | '-' expr
    13     | '(' expr ')'
 
 
@@ -33,14 +25,14 @@ Terminals, with rules where they appear
     '\n' (10) 3 4 5
     '(' (40) 13
     ')' (41) 13
+    '*' <int> (42) 9
+    '+' <int> (43) 7
+    '-' <int> (45) 8 12
+    '/' <int> (47) 10
+    '^' <int> (94) 11
     error (256) 5
-    "number" <int> (258) 12
-    ADD <int> (259) 6
-    SUB <int> (260) 7
-    MUL <int> (261) 9
-    DIV <int> (262) 10
-    NEG <int> (263)
-    POW <int> (264)
+    "number" <int> (258) 6
+    NEG <int> (259)
 
 
 Nonterminals, with rules where they appear
@@ -54,14 +46,8 @@ Nonterminals, with rules where they appear
         on left: 3 4 5
         on right: 2
     expr <int> (16)
-        on left: 6 7 8
-        on right: 4 6 7 13
-    term <int> (17)
-        on left: 9 10 11
-        on right: 6 7 8 9 10
-    fact <int> (18)
-        on left: 12 13
-        on right: 9 10 11
+        on left: 6 7 8 9 10 11 12 13
+        on right: 4 7 8 9 10 11 12 13
 
 
 State 0
@@ -81,13 +67,12 @@ State 1
     $end      shift, and go to state 2
     error     shift, and go to state 3
     "number"  shift, and go to state 4
-    '\n'      shift, and go to state 5
-    '('       shift, and go to state 6
+    '-'       shift, and go to state 5
+    '\n'      shift, and go to state 6
+    '('       shift, and go to state 7
 
-    line  go to state 7
-    expr  go to state 8
-    term  go to state 9
-    fact  go to state 10
+    line  go to state 8
+    expr  go to state 9
 
 
 State 2
@@ -101,179 +86,245 @@ State 3
 
     5 line: error • '\n'
 
-    '\n'  shift, and go to state 11
+    '\n'  shift, and go to state 10
 
 
 State 4
 
-   12 fact: "number" •
+    6 expr: "number" •
 
-    $default  reduce using rule 12 (fact)
+    $default  reduce using rule 6 (expr)
 
 
 State 5
+
+   12 expr: '-' • expr
+
+    "number"  shift, and go to state 4
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
+
+    expr  go to state 11
+
+
+State 6
 
     3 line: '\n' •
 
     $default  reduce using rule 3 (line)
 
 
-State 6
+State 7
 
-   13 fact: '(' • expr ')'
+   13 expr: '(' • expr ')'
 
     "number"  shift, and go to state 4
-    '('       shift, and go to state 6
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
 
     expr  go to state 12
-    term  go to state 9
-    fact  go to state 10
 
 
-State 7
+State 8
 
     2 input: input line •
 
     $default  reduce using rule 2 (input)
 
 
-State 8
-
-    4 line: expr • '\n'
-    6 expr: expr • ADD term
-    7     | expr • SUB term
-
-    ADD   shift, and go to state 13
-    SUB   shift, and go to state 14
-    '\n'  shift, and go to state 15
-
-
 State 9
 
-    8 expr: term •
-    9 term: term • MUL fact
-   10     | term • DIV fact
+    4 line: expr • '\n'
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
 
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
-
-    $default  reduce using rule 8 (expr)
+    '+'   shift, and go to state 13
+    '-'   shift, and go to state 14
+    '*'   shift, and go to state 15
+    '/'   shift, and go to state 16
+    '^'   shift, and go to state 17
+    '\n'  shift, and go to state 18
 
 
 State 10
-
-   11 term: fact •
-
-    $default  reduce using rule 11 (term)
-
-
-State 11
 
     5 line: error '\n' •
 
     $default  reduce using rule 5 (line)
 
 
+State 11
+
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
+   12     | '-' expr •
+
+    '^'  shift, and go to state 17
+
+    $default  reduce using rule 12 (expr)
+
+
 State 12
 
-    6 expr: expr • ADD term
-    7     | expr • SUB term
-   13 fact: '(' expr • ')'
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
+   13     | '(' expr • ')'
 
-    ADD  shift, and go to state 13
-    SUB  shift, and go to state 14
-    ')'  shift, and go to state 18
+    '+'  shift, and go to state 13
+    '-'  shift, and go to state 14
+    '*'  shift, and go to state 15
+    '/'  shift, and go to state 16
+    '^'  shift, and go to state 17
+    ')'  shift, and go to state 19
 
 
 State 13
 
-    6 expr: expr ADD • term
+    7 expr: expr '+' • expr
 
     "number"  shift, and go to state 4
-    '('       shift, and go to state 6
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
 
-    term  go to state 19
-    fact  go to state 10
+    expr  go to state 20
 
 
 State 14
 
-    7 expr: expr SUB • term
+    8 expr: expr '-' • expr
 
     "number"  shift, and go to state 4
-    '('       shift, and go to state 6
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
 
-    term  go to state 20
-    fact  go to state 10
+    expr  go to state 21
 
 
 State 15
+
+    9 expr: expr '*' • expr
+
+    "number"  shift, and go to state 4
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
+
+    expr  go to state 22
+
+
+State 16
+
+   10 expr: expr '/' • expr
+
+    "number"  shift, and go to state 4
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
+
+    expr  go to state 23
+
+
+State 17
+
+   11 expr: expr '^' • expr
+
+    "number"  shift, and go to state 4
+    '-'       shift, and go to state 5
+    '('       shift, and go to state 7
+
+    expr  go to state 24
+
+
+State 18
 
     4 line: expr '\n' •
 
     $default  reduce using rule 4 (line)
 
 
-State 16
-
-    9 term: term MUL • fact
-
-    "number"  shift, and go to state 4
-    '('       shift, and go to state 6
-
-    fact  go to state 21
-
-
-State 17
-
-   10 term: term DIV • fact
-
-    "number"  shift, and go to state 4
-    '('       shift, and go to state 6
-
-    fact  go to state 22
-
-
-State 18
-
-   13 fact: '(' expr ')' •
-
-    $default  reduce using rule 13 (fact)
-
-
 State 19
 
-    6 expr: expr ADD term •
-    9 term: term • MUL fact
-   10     | term • DIV fact
+   13 expr: '(' expr ')' •
 
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
-
-    $default  reduce using rule 6 (expr)
+    $default  reduce using rule 13 (expr)
 
 
 State 20
 
-    7 expr: expr SUB term •
-    9 term: term • MUL fact
-   10     | term • DIV fact
+    7 expr: expr • '+' expr
+    7     | expr '+' expr •
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
 
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
+    '*'  shift, and go to state 15
+    '/'  shift, and go to state 16
+    '^'  shift, and go to state 17
 
     $default  reduce using rule 7 (expr)
 
 
 State 21
 
-    9 term: term MUL fact •
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    8     | expr '-' expr •
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
 
-    $default  reduce using rule 9 (term)
+    '*'  shift, and go to state 15
+    '/'  shift, and go to state 16
+    '^'  shift, and go to state 17
+
+    $default  reduce using rule 8 (expr)
 
 
 State 22
 
-   10 term: term DIV fact •
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+    9     | expr '*' expr •
+   10     | expr • '/' expr
+   11     | expr • '^' expr
 
-    $default  reduce using rule 10 (term)
+    '^'  shift, and go to state 17
+
+    $default  reduce using rule 9 (expr)
+
+
+State 23
+
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   10     | expr '/' expr •
+   11     | expr • '^' expr
+
+    '^'  shift, and go to state 17
+
+    $default  reduce using rule 10 (expr)
+
+
+State 24
+
+    7 expr: expr • '+' expr
+    8     | expr • '-' expr
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '^' expr
+   11     | expr '^' expr •
+
+    '^'  shift, and go to state 17
+
+    $default  reduce using rule 11 (expr)

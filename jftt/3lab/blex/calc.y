@@ -4,21 +4,23 @@
   #include <stdio.h>  /* printf. */
   #include <stdlib.h> /* abort. */
   #include <string.h> /* strcmp. */
-
+  #include "my_arithmetic.h"
   int yylex (void);
   void yyerror (char const *);
 }
 
 %define api.header.include {"calc_y.h"}
 
+
+
 /* Generate YYSTYPE from the types used in %token and %type.  */
 %define api.value.type union
 %token  <int> NUM "number"
-%type  <int> expr term fact
-%left <int> ADD SUB
-%left <int> MUL DIV
+%type  <int> expr
+%left <int> '+' '-'
+%left <int> '*' '/'
 %precedence <int> NEG
-%right <int> POW
+%right <int> '^'
 
 /* Generate the parser description file (calc.output).  */
 %verbose
@@ -45,22 +47,15 @@ line:
 ;
 
 expr:
-  expr ADD term { $$ = $1 + $3; }
-| expr SUB term { $$ = $1 - $3; }
-| term
+  NUM
+| expr '+' expr { $$ = $1 + $3; }
+| expr '-' expr { $$ = $1 - $3; }
+| expr '*' expr { $$ = $1 * $3; }
+| expr '/' expr { $$ = $1 / $3; }
+| expr '^' expr { $$ = gpow($1 , $3); }
+| '-' expr %prec NEG { $$ = -$2; }
+| '(' expr ')' {$$ = $2;}
 ;
-
-term:
-  term MUL fact { $$ = $1 * $3; }
-| term DIV fact { $$ = $1 / $3; }
-| fact
-;
-
-fact:
-  "number"
-| '(' expr ')' { $$ = $2; }
-;
-
 %%
 
 /* Called by yyparse on error.  */

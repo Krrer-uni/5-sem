@@ -8,11 +8,11 @@ int yylex();
 %%
 [ \t]+ 	;
 [0-9]+  	{ yylval.NUM = atoi(yytext); return NUM; }
-\+	{ return ADD; }
--	{ return SUB; }
-\*	{ return MUL; }
-\/	{ return DIV; }
-\^  { return POW; }
+\+	{ return '+'; }
+-	{ return '-'; }
+\*	{ return '*'; }
+\/	{ return '/'; }
+\^  { return '^'; }
 \(	{ return '('; }
 \)	{ return ')'; }
 \n  { return '\n'; }
