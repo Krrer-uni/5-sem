@@ -1,4 +1,9 @@
-include("newton.jl")
+#Wojciech Rymer
+include("numericalAnalysis.jl")
 
-mstycznych((x -> sin(x) - (x/2)^2), x -> cos(x) - x/2, 1.5, 1/2*10^(-5),1/2*10^(-5),100000)
-# mstycznych((x->x^2 - 20.), x->2*x, 5.,0.00000000001,0.5,1000000000)
+#test iterations
+println(Numerical.mstycznych((x -> (x/2)^2 + 1), x-> x/2, 1.5, 1/2*10^(-5),1/2*10^(-5),1000))
+#test derivative
+println(Numerical.mstycznych((x -> cos(x)), x-> -sin(x), 0.0, 1/2*10^(-5),1/2*10^(-5),1000))
+#test function 
+println(Numerical.mstycznych((x -> cos(x)), x-> -sin(x), 1.0, 1/2*10^(-5),1/2*10^(-5),1000))
