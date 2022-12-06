@@ -7,6 +7,7 @@ int yylex();
 %}
 %%
 [ \t]+ 	;
+(\\[ \t]*\n)+ ;
 [0-9]+  	{ yylval.NUM = atoi(yytext); return NUM; }
 \+	{ return '+'; }
 -	{ return '-'; }
@@ -15,7 +16,6 @@ int yylex();
 \^  { return '^'; }
 \(	{ return '('; }
 \)	{ return ')'; }
-\\[ \t]*\n { return BREAKLINE;}
 \n  { return '\n'; }
 #   { return '#'; }
 .   { return CHAR; }

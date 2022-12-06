@@ -462,11 +462,11 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[22] =
+static const flex_int16_t yy_accept[23] =
     {   0,
-        0,    0,   15,   13,    1,   11,   12,    8,    9,    5,
-        3,    4,    6,    2,   13,    7,    1,    2,    0,   10,
-        0
+        0,    0,   15,   13,    1,   11,   12,    9,   10,    6,
+        4,    5,    7,    3,   13,    8,    1,    3,    0,    2,
+        0,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -507,40 +507,40 @@ static const YY_CHAR yy_meta[14] =
         1,    1,    1
     } ;
 
-static const flex_int16_t yy_base[22] =
+static const flex_int16_t yy_base[23] =
     {   0,
-        0,    0,   20,   21,   17,   21,   21,   21,   21,   21,
-       21,   21,   21,    7,   12,   21,   15,    5,    0,   21,
-       21
+        0,    0,   21,   22,   18,   22,   22,   22,   22,   22,
+       22,   22,   22,    8,   12,   22,   16,    6,    0,    4,
+        0,   22
     } ;
 
-static const flex_int16_t yy_def[22] =
+static const flex_int16_t yy_def[23] =
     {   0,
-       21,    1,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21,   21,   21,   21,   21,   21,   21,   15,   21,
-        0
+       22,    1,   22,   22,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   22,   22,   22,   22,   15,   22,
+       15,    0
     } ;
 
-static const flex_int16_t yy_nxt[35] =
+static const flex_int16_t yy_nxt[36] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       14,   15,   16,   19,   20,   18,   17,   18,   17,   21,
-        3,   21,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21,   21,   21
+       14,   15,   16,   19,   20,   21,   18,   17,   18,   17,
+       22,    3,   22,   22,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   22
     } ;
 
-static const flex_int16_t yy_chk[35] =
+static const flex_int16_t yy_chk[36] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,   15,   15,   18,   17,   14,    5,    3,
-       21,   21,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21,   21,   21
+        1,    1,    1,   15,   15,   20,   18,   17,   14,    5,
+        3,   22,   22,   22,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   22
     } ;
 
 /* Table of booleans, true if rule could match eol. */
 static const flex_int32_t yy_rule_can_match_eol[15] =
     {   0,
-0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,     };
+0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -879,13 +879,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 22 )
+				if ( yy_current_state >= 23 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 21 );
+		while ( yy_base[yy_current_state] != 22 );
 
 yy_find_action:
 /* %% [10.0] code to find the action number goes here */
@@ -946,50 +946,50 @@ YY_RULE_SETUP
 ;
 	YY_BREAK
 case 2:
+/* rule 2 can match eol */
 YY_RULE_SETUP
 #line 10 "calc.l"
-{ yylval.NUM = atoi(yytext); return NUM; }
+;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 11 "calc.l"
-{ return '+'; }
+{ yylval.NUM = atoi(yytext); return NUM; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 12 "calc.l"
-{ return '-'; }
+{ return '+'; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 13 "calc.l"
-{ return '*'; }
+{ return '-'; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 14 "calc.l"
-{ return '/'; }
+{ return '*'; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 15 "calc.l"
-{ return '^'; }
+{ return '/'; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 16 "calc.l"
-{ return '('; }
+{ return '^'; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 17 "calc.l"
-{ return ')'; }
+{ return '('; }
 	YY_BREAK
 case 10:
-/* rule 10 can match eol */
 YY_RULE_SETUP
 #line 18 "calc.l"
-{ return BREAKLINE;}
+{ return ')'; }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
@@ -1332,7 +1332,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 22 )
+			if ( yy_current_state >= 23 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1365,11 +1365,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 22 )
+		if ( yy_current_state >= 23 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 21);
+	yy_is_jam = (yy_current_state == 22);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }

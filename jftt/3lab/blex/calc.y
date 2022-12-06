@@ -18,7 +18,7 @@
 
 /* Generate YYSTYPE from the types used in %token and %type.  */
 %define api.value.type union
-%token BREAKLINE
+
 %token <char> CHAR
 %token  <long int> NUM "number"
 %type  <long int> pow_expr
@@ -49,9 +49,7 @@ line:
 ;
 
 expr:
-  BREAKLINE expr  { $$ = $2; }
-|  expr BREAKLINE  { $$ = $1; }
-|  NUM { $$ = gfnorm($1,gf_base); printf("%ld ", $1); }
+  NUM { $$ = gfnorm($1,gf_base); printf("%ld ", $1); }
 | expr '+' expr { $$ = gfadd($1, $3,gf_base); printf("+ "); }
 | expr '-' expr { $$ = gfsub($1, $3,gf_base); printf("- "); }
 | expr '*' expr { $$ = gfmul($1, $3,gf_base); printf("* "); }
@@ -62,13 +60,12 @@ expr:
 ;
 
 pow_expr:
-  BREAKLINE pow_expr  { $$ = $2; }
-|  pow_expr BREAKLINE  { $$ = $1; }
-| NUM { $$ = gfnorm($1,gf_base-1); printf("%ld ", $1); }
+  NUM { $$ = gfnorm($1,gf_base-1); printf("%ld ", $1); }
 | pow_expr '+' pow_expr { $$ = gfadd($1, $3,gf_base-1); printf("+ "); }
 | pow_expr '-' pow_expr { $$ = gfsub($1, $3,gf_base-1); printf("- "); }
 | pow_expr '*' pow_expr { $$ = gfmul($1, $3,gf_base-1); printf("* "); }
 | pow_expr '/' pow_expr { $$ = gfdiv($1, $3,gf_base-1); printf("/ "); }
+| pow_expr '^' pow_expr { $$ = gfpow($1, $3,gf_base-1); printf("^ "); }
 | '-' pow_expr %prec NEG { $$ = gfnorm(-$2,gf_base-1); }
 | '(' pow_expr ')' { $$ = $2; }
 ;
@@ -86,7 +83,6 @@ commment:
 | CHAR commment
 | '#' commment
 ;
-
 %%
 
 /* Called by yyparse on error.  */

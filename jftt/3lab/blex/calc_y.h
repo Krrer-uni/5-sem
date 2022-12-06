@@ -54,11 +54,10 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    BREAKLINE = 258,               /* BREAKLINE  */
-    CHAR = 259,                    /* CHAR  */
-    NUM = 260,                     /* "number"  */
-    NEG = 261,                     /* NEG  */
-    NUM_NEG = 262                  /* NUM_NEG  */
+    CHAR = 258,                    /* CHAR  */
+    NUM = 259,                     /* "number"  */
+    NEG = 260,                     /* NEG  */
+    NUM_NEG = 261                  /* NUM_NEG  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -69,17 +68,17 @@ union YYSTYPE
 {
   char CHAR;                               /* CHAR  */
   long int NUM;                            /* "number"  */
-  long int yykind_6;                       /* '+'  */
-  long int yykind_7;                       /* '-'  */
-  long int yykind_8;                       /* '*'  */
-  long int yykind_9;                       /* '/'  */
+  long int yykind_5;                       /* '+'  */
+  long int yykind_6;                       /* '-'  */
+  long int yykind_7;                       /* '*'  */
+  long int yykind_8;                       /* '/'  */
   long int NEG;                            /* NEG  */
   long int NUM_NEG;                        /* NUM_NEG  */
-  long int yykind_12;                      /* '^'  */
+  long int yykind_11;                      /* '^'  */
   long int expr;                           /* expr  */
   long int pow_expr;                       /* pow_expr  */
 
-#line 83 "calc_y.h"
+#line 82 "calc_y.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
