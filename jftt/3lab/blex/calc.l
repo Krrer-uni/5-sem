@@ -15,5 +15,8 @@ int yylex();
 \^  { return '^'; }
 \(	{ return '('; }
 \)	{ return ')'; }
+\\[ \t]*\n { return BREAKLINE;}
 \n  { return '\n'; }
+#   { return '#'; }
+.   { return CHAR; }
 %%
