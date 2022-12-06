@@ -1,6 +1,6 @@
-#line 2 "calc_l.c"
+#line 2 "calc_l.cc"
 
-#line 4 "calc_l.c"
+#line 4 "calc_l.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -564,11 +564,11 @@ static const flex_int16_t yy_rule_linenum[14] =
 char *yytext;
 #line 1 "calc.l"
 #line 4 "calc.l"
-#include "calc_y.h"
+#include "calc_y.hh"
 #include "string.h"
 int yylex();
-#line 571 "calc_l.c"
-#line 572 "calc_l.c"
+#line 571 "calc_l.cc"
+#line 572 "calc_l.cc"
 
 #define INITIAL 0
 
@@ -850,7 +850,7 @@ YY_DECL
 /* %% [7.0] user's declarations go here */
 #line 8 "calc.l"
 
-#line 854 "calc_l.c"
+#line 854 "calc_l.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1012,7 +1012,7 @@ YY_RULE_SETUP
 #line 22 "calc.l"
 ECHO;
 	YY_BREAK
-#line 1016 "calc_l.c"
+#line 1016 "calc_l.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

@@ -4,15 +4,21 @@
   #include <stdio.h>  /* printf. */
   #include <stdlib.h> /* abort. */
   #include <string.h> /* strcmp. */
-  #include "my_arithmetic.h"
+  #include <string>
+  #include <iostream>
+  #include <numeric>
+  #include "my_arithmetic.hh"
+  #define OUTPUT_BUFFER 1000
   int yylex (void);
   void yyerror (char const *);
   extern int yy_flex_debug;
   void yyset_debug(int);
+  std::string output;
   const unsigned int gf_base = 1234577;
+  bool error_flag = false;
 }
 
-%define api.header.include {"calc_y.h"}
+%define api.header.include {"calc_y.hh"}
 
 
 
@@ -21,8 +27,7 @@
 
 %token <char> CHAR
 %token  <long int> NUM "number"
-%type  <long int> pow_expr
-%type  <long int> expr
+%type  <long int> pow_expr num expr
 %left <long int> '+' '-'
 %left <long int> '*' '/'
 %precedence <long int> NEG
@@ -43,32 +48,35 @@ input:
 
 line:
   '\n'
-| expr '\n'  { printf ("\nWynik: %ld\n", $1); }
+| expr '\n'  { printf ("%s\nWynik: %ld\n",output.c_str(), $1); output.erase();}
 | '#' commment '\n'
-| error '\n' { yyerrok; }
+| error '\n' { if(!error_flag){std::cout << "Błąd\n";}; error_flag = false;}
 ;
 
 expr:
-  NUM { $$ = gfnorm($1,gf_base); printf("%ld ", $1); }
-| expr '+' expr { $$ = gfadd($1, $3,gf_base); printf("+ "); }
-| expr '-' expr { $$ = gfsub($1, $3,gf_base); printf("- "); }
-| expr '*' expr { $$ = gfmul($1, $3,gf_base); printf("* "); }
-| expr '/' expr { $$ = gfdiv($1, $3,gf_base); printf("/ "); }
-| expr '^' pow_expr { $$ = gfpow($1, $3,gf_base); printf("^ "); }
-| '-' expr %prec NEG { $$ = gfnorm(-$2,gf_base); }
+  num { $$ = gfnorm($1,gf_base); output.append(std::to_string(gfnorm($1,gf_base)) + " ");}
+| expr '+' expr { $$ = gfadd($1, $3,gf_base); output.append(("+ ")); }
+| expr '-' expr { $$ = gfsub($1, $3,gf_base); output.append(("- ")); }
+| expr '*' expr { $$ = gfmul($1, $3,gf_base); output.append(("* ")); }
+| expr '/' expr { $$ = gfdiv($1, $3,gf_base); output.append(("/ ")); 
+   if($3 == 0)
+      {std::cout << "0 nie ma elementu odwrotnego w grupie GF(1234577)\n"; YYERROR; yyclearin ;output.erase(); error_flag = true;}}
+| expr '^' pow_expr { $$ = gfpow($1, $3,gf_base); output.append(("^ ")); }
 | '(' expr ')' { $$ = $2; }
 ;
 
 pow_expr:
-  NUM { $$ = gfnorm($1,gf_base-1); printf("%ld ", $1); }
-| pow_expr '+' pow_expr { $$ = gfadd($1, $3,gf_base-1); printf("+ "); }
-| pow_expr '-' pow_expr { $$ = gfsub($1, $3,gf_base-1); printf("- "); }
-| pow_expr '*' pow_expr { $$ = gfmul($1, $3,gf_base-1); printf("* "); }
-| pow_expr '/' pow_expr { $$ = gfdiv($1, $3,gf_base-1); printf("/ "); }
-| pow_expr '^' pow_expr { $$ = gfpow($1, $3,gf_base-1); printf("^ "); }
-| '-' pow_expr %prec NEG { $$ = gfnorm(-$2,gf_base-1); }
+  num { $$ = gfnorm($1,gf_base-1); output.append(std::to_string(gfnorm($1,gf_base-1)) + " ");}
+| pow_expr '+' pow_expr { $$ = gfadd($1, $3,gf_base-1); output.append(("+ ")); }
+| pow_expr '-' pow_expr { $$ = gfsub($1, $3,gf_base-1); output.append(("- ")); }
+| pow_expr '*' pow_expr { $$ = gfmul($1, $3,gf_base-1); output.append(("* ")); }
+| pow_expr '/' pow_expr { $$ = gfdiv($1, $3,gf_base-1); output.append(("/ ")); 
+    if(std::gcd($1,$3) != 0)
+      {std::cout << "0 nie ma elementu odwrotnego w grupie GF(1234576)\n"; YYERROR; output.erase(); error_flag = true;}}
+| pow_expr '^' pow_expr { $$ = gfpow($1, $3,gf_base-1); output.append(("^ ")); }
 | '(' pow_expr ')' { $$ = $2; }
 ;
+
 
 commment:
  %empty
@@ -83,13 +91,18 @@ commment:
 | CHAR commment
 | '#' commment
 ;
+
+num:
+  NUM {$$ = $1;}
+| '-' NUM %prec NEG {$$ = -$2;}
+; 
 %%
 
 /* Called by yyparse on error.  */
 void
 yyerror (char const *s)
 {
-  fprintf (stderr, "%s\n", s);
+  // fprintf (stderr, "%s\n", s);
 }
 
 int

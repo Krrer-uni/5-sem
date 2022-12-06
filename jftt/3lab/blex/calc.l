@@ -1,7 +1,7 @@
 %option noyywrap
 %option yylineno
 %{
-#include "calc_y.h"
+#include "calc_y.hh"
 #include "string.h"
 int yylex();
 %}

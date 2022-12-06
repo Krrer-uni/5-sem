@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_CALC_Y_H_INCLUDED
-# define YY_YY_CALC_Y_H_INCLUDED
+#ifndef YY_YY_CALC_Y_HH_INCLUDED
+# define YY_YY_CALC_Y_HH_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -77,8 +77,9 @@ union YYSTYPE
   long int yykind_11;                      /* '^'  */
   long int expr;                           /* expr  */
   long int pow_expr;                       /* pow_expr  */
+  long int num;                            /* num  */
 
-#line 82 "calc_y.h"
+#line 83 "calc_y.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -93,4 +94,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_CALC_Y_H_INCLUDED  */
+#endif /* !YY_YY_CALC_Y_HH_INCLUDED  */
