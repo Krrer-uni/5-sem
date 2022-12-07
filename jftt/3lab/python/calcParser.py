@@ -7,13 +7,6 @@ precedence = (
     ('right', 'UMINUS'),
 )
 
-# dictionary of names
-names = {}
-
-def p_statement_assign(p):
-    'statement : NAME "=" expression'
-    names[p[1]] = p[3]
-
 
 def p_statement_expr(p):
     'statement : expression'
@@ -46,17 +39,8 @@ def p_expression_group(p):
 
 
 def p_expression_number(p):
-    "expression : NUMBER"
+    "expression : NUM"
     p[0] = p[1]
-
-
-def p_expression_name(p):
-    "expression : NAME"
-    try:
-        p[0] = names[p[1]]
-    except LookupError:
-        print("Undefined name '%s'" % p[1])
-        p[0] = 0
 
 
 def p_error(p):

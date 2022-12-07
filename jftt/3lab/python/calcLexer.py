@@ -1,18 +1,23 @@
 base = 1234577
 
 tokens = (
-    'NUM',
+    'NUMBER',
+    'PLUS',
+    # 'MINUS',
+    # 'TIMES',
+    # 'DIVIDE',
+    # 'LPAREN',
+    # 'RPAREN',
+
     'IGNORE',
     'ERROR',
     'NEWLINE',
     'COMMENT',
 )
 
-literals = ['=', '+', '-', '*', '/', '(', ')','\n']
+t_PLUS = r'\+'
 
-# Tokens
-
-def t_NUM(t):
+def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
@@ -20,10 +25,11 @@ def t_NUM(t):
 t_ignore = " \t"
 
 
-def t_newline(t):
+def t_NEWLINE(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
 
-def t_error(t):
+def t_ERROR(t):
+    
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)

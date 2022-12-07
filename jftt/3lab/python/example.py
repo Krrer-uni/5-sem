@@ -17,7 +17,7 @@ def to_gf(a, n):
         a+=n
     while a >= n:
         a -= n
-    return GF(a)
+    return a
 
 def gcdExtended(a, b):
     # Base Case
@@ -33,28 +33,37 @@ def gcdExtended(a, b):
      
     return gcd,x,y
 
- #LEX START
+
 import sys
 sys.path.insert(0, "../..")
 
-if sys.version_info[0] >= 3:
-    raw_input = input
+
+
+###################LEXER#############################
+
 
 tokens = (
     'NUMBER',
+    'COMMENT',
 )
 
 literals = ['=', '+', '-', '*', '/', '(', ')','^']
 
 # Tokens
 
+t_ignore = " \t"
+def t_ignore_breakline(t):
+    r'\\'
+    pass
+
+def t_ignore_COMMENT(t):
+     r'\#.*\n'
+     pass
 
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
-
-t_ignore = " \t"
 
 
 def t_newline(t):
@@ -69,13 +78,14 @@ def t_error(t):
 # Build the lexer
 import ply.lex as lex
 lex.lex()
-
-# Parsing rules
+lexer = lex.lex(debug=1)
+#####################PARSER########################
 
 precedence = (
     ('left', '+', '-'),
     ('left', '*', '/'),
     ('right', 'UMINUS'),
+    ('right', '^'),
 )
 
 
@@ -123,7 +133,9 @@ def p_expression_group(p):
 
 def p_expression_number(p):
     "expression : number"
-    p[0] = p[1]
+    p[0] = GF(to_gf(p[1],base))
+    global output
+    output+=str(p[0])+" "
 
 ##################POW_ARITHM#####################
 def p_pow_exp_binop(p):
@@ -146,7 +158,7 @@ def p_pow_exp_binop(p):
         if k != 1:
             print(p[3], " nie jest odwracalny w GF(",pbase,")")
             return
-        p[0] = (p[1] * b)%pbase
+        p[0] = (p[1] * y)%pbase
         output+="/ "
 
 def p_pow_exp_uminus(p):
@@ -161,7 +173,9 @@ def p_pow_exp_group(p):
 
 def p_pow_exp_number(p):
     "pow_exp : number"
-    p[0] = p[1]
+    p[0] = to_gf(p[1],pbase)
+    global output
+    output+=str(p[0])+" "
 
 ############NUMBER####################
 
@@ -170,11 +184,9 @@ def p_number(p):
                 | NUMBER'''
     global output
     if p[1] == '-':
-        p[0] = to_gf(-p[2],base)
-        output+=str(p[0])+" "
+        p[0] = -p[2]
     else :
-        p[0] = to_gf(p[1],base)
-        output+=str(p[0])+" "
+        p[0] = p[1]
 
 
 def p_error(p):
@@ -186,11 +198,17 @@ def p_error(p):
 import ply.yacc as yacc
 yacc.yacc()
 
+
 while 1:
-    try:
-        s = raw_input('calc > ')
-    except EOFError:
-        break
-    if not s:
-        continue
-    yacc.parse(s)
+    lines = ""
+    while 1:
+        try:
+            lines += input()
+        except EOFError:
+            break
+        lines += '\n'
+        if not lines.endswith('\\\n'):
+            
+            yacc.parse(lines)
+            break
+    
