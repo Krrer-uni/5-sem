@@ -1,0 +1,21 @@
+#pierwszy argument to n z zadania
+#drugi argument to rozmiar aktualnych permutacji + 1 (unikanie punktów stałych)
+#trzeci to lista aktualnych permutacji
+:{
+    zad2helper2 _ _ [] = []
+    zad2helper2 n y (z:zs) = [z ++ [t] | t <- [1..n] , t /= y, not (t `elem` z)] ++ zad2helper2 n y zs
+:}
+
+
+#pierwszy argument to n z treści zadania,
+#drugi to counter na który element permutacji jest dodawany
+#trzeci to akutalny zbiór permutacji
+:{
+    zad2helper _ [] zs = zs
+    zad2helper n (y:ys) zs = zad2helper n ys (zad2helper2 n y zs)
+:}
+
+zad2 n = zad2helper n [1..n] [[]]
+
+
+zad2 3 = [2,3,1] [3,1,2]

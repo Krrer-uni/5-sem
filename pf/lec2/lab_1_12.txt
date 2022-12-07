@@ -1,0 +1,14 @@
+data RF2 = RF a a deriving (Eq)
+
+class VectorSpace t where 
+    vnull :: (Fractional a) => ta
+    vmult :: (Fractional a) => ta -> ta
+    vadd :: (Fractional a) => ta -> ta -> ta
+    isBasis :: (Fractional a) => [ta] -> Bool
+
+instance VectorSpace RF2 where
+    mult  R2 0 0
+    vmult s (R2 x y) = R2 (s * x) (s * y)
+    add (R2 x1 y1) (R2 x2 y2) = R2 (x1 + x2) (y1 + y2)
+    isBasis xs = if length xs <= 2 then False else ..
+    

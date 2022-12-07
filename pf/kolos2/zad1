@@ -1,0 +1,16 @@
+#funkcja która sprawdza czy x został już znaleziony, jeśli tak dodajemy go do istniejącego zbioru, jak nie to tworzymy nowy zbiór
+:{
+collecthelper x [] = [[x]]
+collecthelper x (y:ys) = if (x `elem` y) then ((x:y):ys) else y:(collecthelper x ys)
+:}
+
+#funkcja która wywołuje collecthelper dla każdego elementu wejściowej listy
+:{
+collectwrapper [] ys = ys
+collectwrapper (x:xs) ys = collect xs (collecthelper x ys)
+:}
+
+#wrapper aby móc wywoływać funkcje z jednym argumentem
+:{
+collect xs = collectwrapper xs []
+:}
