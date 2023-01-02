@@ -20,9 +20,9 @@ function loadMatrix(name)
         for k in 1:n
             rowStart = max(1, k - l)
             rowEnd = min(k+l, n)
-            for k in rowStart:rowEnd
+            for j in rowStart:rowEnd
                 push!(I,k)
-                push!(J,k)
+                push!(J,j)
                 push!(V,0.0)
             end
         end
@@ -38,8 +38,11 @@ function loadMatrix(name)
             V[i] = parse(Float64, item[3])
             i += 1
         end
-        
+
+
         matrix = sparse(I,J,V)
+        
+        transpose(transpose(matrix))
     end
     return (matrix, n, l)
 end

@@ -16,7 +16,7 @@ function solveGaussForb(dataA,x)
 end
 
 function solveGaussForx(inputA, inputb)
-    A = copy(inputA[1])
+    A = transpose(copy(inputA[1]))
     n = copy(inputA[2])
     l = copy(inputA[3])
     b = copy(inputb)
@@ -26,17 +26,21 @@ function solveGaussForx(inputA, inputb)
         lastRow = min(i+l, n)
         
         for k in firstRow:lastRow #row
-            q = A[k,i]/A[i,i]
-            A[k,i:lastRow] = A[k,i:lastRow] - A[i,i:lastRow] * q
-            A[k,i] = 0
-            b[k] = b[k] - b[i] * q
+            if A[i,k] == 0
+                continue
+            end
+            q = -A[i,k]/A[i,i]
+           A[i:lastRow,k] = A[i:lastRow,k] + A[i:lastRow,i] * q
+            A[i,k] = 0
+            b[k] = b[k] + b[i] * q
         end
     end
-
-    @time dropzeros!(A)
+    
+    A = transpose(A)
+    dropzeros!(A)
     x[n] = b[n] / A[n,n]
 
-    @time for i in (n-1):-1:1
+    for i in (n-1):-1:1
         rowEnd = min(i+l,n)
         
         for k in rowEnd:-1:i+1
