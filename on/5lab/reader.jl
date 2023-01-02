@@ -3,15 +3,33 @@ using SparseArrays
 function loadMatrix(name)
     matrix = 0
     n = 0
-    m = 0
+    l = 0
     open(name, "r") do file
         header = split(readline(file), " ")
         n = parse(Int, header[1])
-        m = parse(Int,header[2])
-        elem_count = Int((n/m) * m^2 + n - m + ((n/m) - 1) * (2 * m -1) )
-        I = zeros(Int,elem_count)
-        J = zeros(Int,elem_count)
-        V = zeros(Float64,elem_count)
+        l = parse(Int, header[2])
+        elem_count = Int((n/l) * l^2 + n - l + ((n/l) - 1) * (2 * l -1) )
+
+        I = Int[]
+        J = Int[]
+        V = Float64[]
+        I = append!(I,zeros(Int,elem_count))
+        J = append!(J, zeros(Int,elem_count))
+        V = append!(V, zeros(Float64,elem_count))
+        
+        for k in 1:n
+            rowStart = max(1, k - l)
+            rowEnd = min(k+l, n)
+            for k in rowStart:rowEnd
+                push!(I,k)
+                push!(J,k)
+                push!(V,0.0)
+            end
+        end
+        s = length(I)
+        @show s
+
+        
         i = 1
         for line in eachline(file)
             item = split(line, " ")
@@ -20,10 +38,10 @@ function loadMatrix(name)
             V[i] = parse(Float64, item[3])
             i += 1
         end
-
+        
         matrix = sparse(I,J,V)
     end
-    return (matrix, n, m)
+    return (matrix, n, l)
 end
 
 function loadVector(name)

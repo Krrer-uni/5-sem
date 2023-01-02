@@ -6,9 +6,9 @@ include("reader.jl")
 # x = ones(Float64,A[2])
 
 # println(solveGaussForb(A,x))
-
-A = loadMatrix("Dane500000_1_1/A.txt")
-b = loadVector("Dane500000_1_1/b.txt")
+# solveGaussForx(A,b)
+A = loadMatrix("Dane16_1_1/A.txt")
+b = loadVector("Dane16_1_1/b.txt")
 x = ones(Float64,A[2])
-@time solveGaussForb(A,x);
-@time A[1]*x
+@time solveGaussForb(A,x)
+@time solveGaussForx(A,b)
