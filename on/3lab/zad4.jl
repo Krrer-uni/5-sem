@@ -1,4 +1,6 @@
-include("bisekcja.jl")
+#Wojciech Rymer
+include("numericalAnalysis.jl")
 
-println(mbisekcji(x->exp(x) -3*x, -10.,1.5,10^(-4),10^(-4)))
-println(mbisekcji(x->exp(x) -3*x, 1.5,10.,10^(-4),10^(-4)))
+println(Numerical.mbisekcji(x -> sin(x) - (x/2)^2,1.5,2.0,(1/2)*10^(-5),(1/2)*10^(-5)))
+println(Numerical.mstycznych((x -> sin(x) - (x/2)^2), x -> cos(x) - x/2, 1.5, 1/2*10^(-5),1/2*10^(-5),100000))
+println(Numerical.msiecznych(x -> sin(x) - (x/2)^2, 1.0, 2.0, 1/2*10^(-5),1/2*10^(-5),100000))
