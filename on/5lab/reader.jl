@@ -19,7 +19,7 @@ function loadMatrix(name)
         
         for k in 1:n
             rowStart = max(1, k - l)
-            rowEnd = min(k+l, n)
+            rowEnd = min(k+l*2, n)
             for j in rowStart:rowEnd
                 push!(I,k)
                 push!(J,j)

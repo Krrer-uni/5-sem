@@ -1,0 +1,7 @@
+:{
+zad4_help [] = 1
+zad4_help (x:xs)  = x * (zad4_help xs)
+
+
+zad4 xs = (zad4_help xs) ** (1 / (fromIntegral (length xs)) )
+:}

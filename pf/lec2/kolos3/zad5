@@ -1,0 +1,8 @@
+    :{
+    sqrtcheck n [] = False
+    sqrtcheck n (x:xs)  = if n == x * x then True else sqrtcheck n xs
+    :}
+    :{
+    delsqrt [] = []
+    delsqrt (x:xs) = if sqrtcheck x [1..x] then (delsqrt xs) else (x:(delsqrt xs))
+    :}

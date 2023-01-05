@@ -1,0 +1,8 @@
+:{
+subseq 0 _ = [[]]
+subseq _ [] = []
+subseq len (x:xs) = (map (x:) (subseq (len-1) xs)) ++ subseq len xs
+:}
+
+
+zad6 k n = subseq k [1..n]
