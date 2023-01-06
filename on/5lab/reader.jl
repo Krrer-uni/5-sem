@@ -26,8 +26,6 @@ function loadMatrix(name)
                 push!(V,0.0)
             end
         end
-        s = length(I)
-        @show s
 
         
         i = 1

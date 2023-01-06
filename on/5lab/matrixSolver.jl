@@ -1,6 +1,9 @@
+module blocksys
+export multiply, gauss, pivotGauss, LU, solveLU, pivotLU, solvePivotLU
+    
 using SparseArrays
 
-function solveGaussForb(dataA,x)
+function multiply(dataA,x)
     A = dataA[1]
     n = dataA[2]
     l = dataA[3]
@@ -15,7 +18,7 @@ function solveGaussForb(dataA,x)
     return b
 end
 
-function solveGaussForx(inputA, inputb)
+function gauss(inputA, inputb)
     A = transpose(copy(inputA[1]))
     n = copy(inputA[2])
     l = copy(inputA[3])
@@ -49,7 +52,7 @@ function solveGaussForx(inputA, inputb)
     return x
 end
 
-function solveGaussForxPartialChoice(inputA, inputb)
+function pivotGauss(inputA, inputb)
     A = transpose(copy(inputA[1]))
     n = copy(inputA[2])
     l = copy(inputA[3])
@@ -62,9 +65,9 @@ function solveGaussForxPartialChoice(inputA, inputb)
         firstRow = min(i+1,n)
         lastRow = min(i+l, n)
         t = i
-        max = A[i,rowlookup[i]]
+        max = abs(A[i,rowlookup[i]])
         for k in firstRow:lastRow #row
-            coef = A[i,rowlookup[k]] 
+            coef = abs(A[i,rowlookup[k]]) 
             if coef > max
                 max = coef
                 t = k
@@ -156,61 +159,61 @@ function solveLU(inputLU,b)
     return x
 end
 
-function pcLU(inputA)
+function pivotLU(inputA)
     A = transpose(copy(inputA[1]))
     n = copy(inputA[2])
     l = copy(inputA[3])
-    x = zeros(n)
 
-    rowlookup = collect(1:n)
+    P = collect(1:n)
 
     for i in 1:n-1 #column
         firstRow = min(i+1,n)
         lastRow = min(i+l, n)
         t = i
-        max = A[i,rowlookup[i]]
+        max = abs(A[i,P[i]])
         for k in firstRow:lastRow #row
-            coef = A[i,rowlookup[k]] 
+            coef = abs(A[i,P[k]]) 
             if coef > max
                 max = coef
                 t = k
             end
         end
-        rowlookup[t],rowlookup[i] = rowlookup[i],rowlookup[t]
+        P[t],P[i] = P[i],P[t]
 
         rowEnd = min(i+2*l,n)
         for k in firstRow:lastRow #row
-            if A[i,rowlookup[k]] == 0
+            if A[i,P[k]] == 0
                 continue
             end
-            q = -A[i,rowlookup[k]]/A[i,rowlookup[i]]
-            A[i:rowEnd,rowlookup[k]] = A[i:rowEnd,rowlookup[k]] + A[i:rowEnd,rowlookup[i]] * q
-            A[i,rowlookup[k]] = -q
+            q = -A[i,P[k]]/A[i,P[i]]
+            A[i:rowEnd,P[k]] = A[i:rowEnd,P[k]] + A[i:rowEnd,P[i]] * q
+            A[i,P[k]] = -q
         end
     end
     
     A = transpose(A)
     dropzeros!(A)
-    return (A,rowlookup,n,l)
+    return (A,n,l,P)
 end
 
-function solvePcLU(inputLU,b)
-    LU = inputLU[1]
-    P = inputLU[2]
-    n = inputLU[3]
-    l = inputLU[4]
+function solvePivotLU(inputLU,inputb)
+    LU = copy(inputLU[1])
+    n = copy(inputLU[2])
+    l = copy(inputLU[3])
+    P = copy(inputLU[4])
+    b = copy(inputb)
     y = zeros(Float64,n)
     x = zeros(Float64,n)
 
-    y[1] = b[1]
+    y[1] = b[P[1]]
 
     for i in 2:n
-        rowStart = max(i-l,1)
+        rowStart = max(i-l*2,1)
         
         for k in rowStart:i-1
-            b[i] = b[i] - LU[P[i],k] * y[k]
+            b[P[i]] = b[P[i]] - LU[P[i],k] * y[k]
         end
-        y[i] = b[i]
+        y[i] = b[P[i]]
     end
     
     x[n] = y[n] / LU[P[n],n]
@@ -225,4 +228,6 @@ function solvePcLU(inputLU,b)
     end
 
     return x
+end
+
 end
