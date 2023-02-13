@@ -1,9 +1,11 @@
 using SparseArrays
 
+
+# Funkcja czytająca macierz z pliku
 function loadMatrix(name)
-    matrix = 0
-    n = 0
-    l = 0
+    matrix = 0 # wczytywana macierz
+    n = 0 # rozmiar macierzy
+    l = 0 # rozmiar podmacierzy
     open(name, "r") do file
         header = split(readline(file), " ")
         n = parse(Int, header[1])
@@ -17,7 +19,7 @@ function loadMatrix(name)
         J = append!(J, zeros(Int,elem_count))
         V = append!(V, zeros(Float64,elem_count))
         
-        for k in 1:n
+        for k in 1:n  # alokacja pamięci zerami
             rowStart = max(1, k - l)
             rowEnd = min(k+l*2, n)
             for j in rowStart:rowEnd
@@ -45,9 +47,10 @@ function loadMatrix(name)
     return (matrix, n, l)
 end
 
+# Funkcja czytająca wektor z pliku
 function loadVector(name)
-    vector = 0
-    n = 0
+    vector = 0 # wczytywany wektor
+    n = 0 # rozmiar wektora
     open(name,"r") do file
         header = split(readline(file), " ")
         n = parse(Int, header[1])
